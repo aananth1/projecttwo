@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: ExchangeRate
+    columns:
+      - name: RatesPK
+        tests:
+          - not_null
+          - unique
+
+      - name: Base
+        tests:
+          - accepted_values:
+              values: ['EUR']
+
+      - name: Date
+        tests:
+          - not_null

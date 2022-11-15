@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: EXCHANGE_RATES
+    database: EXCHANGE_RATES
+    schema: BRONZE
+    tables:
+      - name: exchange_rates_scd
