@@ -22,8 +22,9 @@ What users would find your data useful?
 ## Questions 
 What questions are you trying to solve with your data? 
 
-1. Correlation between different currencies, for example AUD and USD, GBP, INR.
-2. General price trends (economic events)
+1. 7 day moving average different currencies, for example AUD and USD, GBP, INR.
+2. Daily percentage change in Exchange rates.
+3. General price trends (economic events)
 
 <br/>
 
@@ -34,6 +35,9 @@ What datasets are you sourcing from?
 ### Exchange Rates API
 
 - https://exchangeratesapi.io/
+
+# Architecture
+![ProjectTwp](https://user-images.githubusercontent.com/2142469/203002378-5c69ec87-044e-4e11-b778-4d43086fd0ca.svg)
 
 # Project structure
 
@@ -97,6 +101,41 @@ What datasets are you sourcing from?
 
 <br/>
 
+## Extract and Load
+Exchange Rates API connector is available in Airbyte. The data is extracted using credentials and loaded into the Bronze layer of Snowflake.
+There are 3 raw tables conatining similar data. These are:
+1. Exchange_Rates
+2. Exchange_Rates_Rates
+3. Exchange_Rates_SCD
+
+The Exchange_Rates_SCD table conatins data such as Base currency, Date, Rates, etc at Daily level. 
+
+![Bronze](https://user-images.githubusercontent.com/2142469/203020403-6c0a0389-d152-4bfc-ab15-1017b26b8fff.png)
+
+## Transformation
+
+### Silver
+The Exchange_Rates_SCD tables data is incrementally ingested into the silver at daily interval. Here the data is unpacked from the JSON format for the prices and stored in individual columns for the required currencies. This table contains data such as Base, date, AUD_Daily_Price, BTC_Daily_price, etc.
+
+![Silver](https://user-images.githubusercontent.com/2142469/203020657-28e918d3-b83d-40b4-94e3-cfb18ffef1da.png)
+
+
+### Gold
+
+Thge Gold layer tables is a full-refresh table. The transformations done at this stage are:
+1. All other currencies were dropped except AUD.
+2. A new column was created based on the 7 day rolling average.
+3. Another new column was created to calculate daily price changes. 
+4. Only Active records are used for the calcuations (where row_active_ind = 1)
+
+![Gold](https://user-images.githubusercontent.com/2142469/203020694-f7c01a69-9385-47ae-b5ec-a10c36779d88.png)
+
+## DBT Docs
+
+
+![dbt-dag](https://user-images.githubusercontent.com/2142469/203021318-ec8fb41f-de0f-493e-a023-31130a1ed7fc.png)
+
+
 ## Technical Details
 # Extraction Source
 Exchange Rates API
@@ -134,9 +173,11 @@ Add dag_exchangerates.py to your Airflow DAG folder.
 ![shot_221121_172111](https://user-images.githubusercontent.com/106643739/202979366-4d5cd3e7-6978-455a-a7ba-becab04f599d.png)
 
 # Hosting
-Cloud - AWS, Snowflake. 
+Snowflake. 
 
-# Architecture
-![ProjectTwp](https://user-images.githubusercontent.com/2142469/203002378-5c69ec87-044e-4e11-b778-4d43086fd0ca.svg)
+# Lessons Learnt
+
+1. Make sure your Docker Images are not cooked.
+
 
 <br/>
