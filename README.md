@@ -1,7 +1,7 @@
 # projecttwo
 DE Bootcamp Project Two
 
-# Crypto Currency ETL with AirByte, DBT & Snowflake
+# Exchange Rates ETL with AirByte, DBT & Snowflake
 
 # Project plan 
 
