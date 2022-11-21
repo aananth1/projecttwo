@@ -59,6 +59,9 @@ Airflow
 # Hosting
 Cloud - AWS, Snowflake. 
 
+# Architecture
+![ProjectTwp](https://user-images.githubusercontent.com/2142469/203002378-5c69ec87-044e-4e11-b778-4d43086fd0ca.svg)
+
 <br/>
 
 ## Breakdown of tasks (tbc)
