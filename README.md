@@ -35,6 +35,66 @@ What datasets are you sourcing from?
 
 - https://exchangeratesapi.io/
 
+# Project structure
+
+```text
+├── AirflowDAGs
+├── Data Integration
+├── docker
+├── ExchangeRates
+│   ├── analyses
+│   ├── dbt_packages
+│   │   └── dbt_utils
+│   │       ├── docs
+│   │       │   └── decisions
+│   │       ├── etc
+│   │       ├── integration_tests
+│   │       │   ├── ci
+│   │       │   ├── data
+│   │       │   │   ├── cross_db
+│   │       │   │   ├── datetime
+│   │       │   │   ├── etc
+│   │       │   │   ├── geo
+│   │       │   │   ├── materializations
+│   │       │   │   ├── schema_tests
+│   │       │   │   ├── sql
+│   │       │   │   └── web
+│   │       │   ├── macros
+│   │       │   ├── models
+│   │       │   │   ├── cross_db_utils
+│   │       │   │   ├── datetime
+│   │       │   │   ├── generic_tests
+│   │       │   │   ├── geo
+│   │       │   │   ├── materializations
+│   │       │   │   ├── sql
+│   │       │   │   └── web
+│   │       │   └── tests
+│   │       │       ├── generic
+│   │       │       ├── jinja_helpers
+│   │       │       └── sql
+│   │       ├── macros
+│   │       │   ├── cross_db_utils
+│   │       │   │   └── deprecated
+│   │       │   ├── generic_tests
+│   │       │   ├── jinja_helpers
+│   │       │   ├── materializations
+│   │       │   ├── sql
+│   │       │   └── web
+│   │       └── tests
+│   │           └── functional
+│   │               ├── cross_db_utils
+│   │               └── data_type
+│   ├── logs
+│   ├── macros
+│   ├── models
+│   │   ├── Gold
+│   │   └── Silver
+│   ├── seeds
+│   ├── snapshots
+│   └── tests
+└── logs
+```
+
 <br/>
 
 ## Technical Details
@@ -56,6 +116,23 @@ DBT
 # Scheduling of tasks
 Airflow
 
+## DAG
+The Airflow DAG allows you to orchestrate the ingestion via AIrflow including querying via API & loading data to Snowflake (via connection to Airbyte) and execute the ExchangeRates DBT Project on the Snowflake data to promote data to Silver & Gold.
+
+## DAG Instructions
+Fill in blanks in code as indicated in the file. See example below for guidance.
+Add dag_exchangerates.py to your Airflow DAG folder.
+
+![123123123123](https://user-images.githubusercontent.com/106643739/202979111-b3857dbc-203e-4df4-bba5-5762e6cdc610.png)
+
+## DAG Assumptions
+* Working Airflow environment with DBT setup and working as a sub-environment.
+* AirByte running locally or dockerized + locally on port 8000. If dockerized locally, set server=host.docker.internal. If hosted locally, use server=localhost. If cloud-hosted, use appropriate IP address based on configuration.
+
+## Airflow DAG Results
+
+![shot_221121_172111](https://user-images.githubusercontent.com/106643739/202979366-4d5cd3e7-6978-455a-a7ba-becab04f599d.png)
+
 # Hosting
 Cloud - AWS, Snowflake. 
 
@@ -63,41 +140,3 @@ Cloud - AWS, Snowflake.
 ![ProjectTwp](https://user-images.githubusercontent.com/2142469/203002378-5c69ec87-044e-4e11-b778-4d43086fd0ca.svg)
 
 <br/>
-
-## Breakdown of tasks (tbc)
-
-<table>
-  <tr>
-    <th>Task</th>
-    <th>Parties</th>
-  </tr>
-  <tr>
-    <td>Extract and Load</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Transform</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Stitching the ELT Pipeline Together</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Unit tests and documentation</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Dockerize solution</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Creating the AWS Services (RDS, ECS)</td>
-    <td></td>
-  </tr>
-  <tr>
-    <td>Pair program on deploying the solution to AWS </td>
-    <td></td>
-  </tr>
-</table>
-
